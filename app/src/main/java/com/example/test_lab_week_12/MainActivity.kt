@@ -64,8 +64,21 @@ class MainActivity : AppCompatActivity() {
                     movieViewModel.popularMovies.collect {
 // add the list of movies to the adapter
                             movies ->
-                        movieAdapter.addMovies(movies)
+//                        movieAdapter.addMovies(movies)
+                        //  1. Get current year (Logic restored from your comments)
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+
+                        // 2. Apply Filter and Sort
+                        val sortedAndFilteredMovies = movies
+                            .filter { movie ->
+                                movie.releaseDate?.startsWith(currentYear) == true
+                            }
+                            .sortedByDescending { it.popularity } // <--- This is the popularity sort
+
+                        // 3. Add to adapter
+                        movieAdapter.addMovies(sortedAndFilteredMovies)
                     }
+
                 }
                 launch {
 // collect the error message from the StateFlow
